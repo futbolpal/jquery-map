@@ -3,8 +3,8 @@ This library allows you to turn any div into a map.  It exposes an abstract laye
 
 
 # Included Engines
-Google Maps
-ESRI Maps
+* Google Maps
+* ESRI Maps
 
 # Functions 
 init = function(opts)
