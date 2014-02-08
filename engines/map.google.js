@@ -48,12 +48,21 @@
 	});
 
 
+	/** 
+	 * Private helper function 
+	 * Convert RGB color array to 'rgb(x,y,z)'
+	 */
 	var toRgbString = function(colorArray){
 		return "rgb($1,$2,$3)"
 					.replace("$1", colorArray[0])
 					.replace("$2", colorArray[1])
 					.replace("$3", colorArray[2]);
 	}
+
+	/** 
+	 * Private helper function 
+	 * Convert RGBa color array to 'rgb(x,y,z, a)'
+	 */
 	var toRgbaString = function(colorArray){
 		return "rgba($1,$2,$3,$4)"
 					.replace("$1", colorArray[0])
@@ -160,6 +169,11 @@
 		this._map = new google.maps.Map(mapDiv, engineOptions);
 	}
 
+	/**
+	 * Add a pin to the map 
+	 * Returns the added pin object 
+	 * fnOptions - object, see Esri defaults above (GoogleEngineDefaults.pin)
+	 */
 	MapEngine.Google.prototype.addPin = function(options, pinOptions){
 		var _t = this;
 		var pinOptions = $.extend(true, {}, GoogleEngineDefaults.pin, pinOptions);
@@ -192,11 +206,18 @@
 		this._pins[pinOptions.id] = marker;
 	}
 
+	/**
+	 * fnOptions - object
+	 * 	.id - ID of pin to remove 
+	 */
 	MapEngine.Google.prototype.removePin = function(options, fnOptions){
 		this._pins[fnOptions.id].setMap(null);
 		delete this._pins[fnOptions.id];
 	}
 
+	/**
+	 * Google maps does not support adding proprietary ESRI Layers 
+	 */
 	MapEngine.Google.prototype.addEsriLayer = function(options, fnOptions){
 		console.warn("Function not supported");
 	}
@@ -216,7 +237,10 @@
 		this._kmlLayers[fnOptions.id] = layer;
 	}
 
-
+	/**
+	 * fnOptions - object
+	 * 	.id - ID of kml layer to remove 
+	 */
 	MapEngine.Google.prototype.removeKmlLayer = function(options, fnOptions){
 		this._kmlLayers[fnOptions.id].setMap(null);
 		delete this._kmlLayers[fnOptions.id];
@@ -285,6 +309,10 @@
 		}
 	}
 
+	/**
+	 * fnOptions - object
+	 * 	.id - ID of geometry layer to remove 
+	 */
 	MapEngine.Google.prototype.removeGeometryLayer = function(options, fnOptions){
 		$.each(this._geometryLayers[fnOptions.id], function(i, shape){
 			shape.setMap(null);
@@ -292,9 +320,15 @@
 		delete this._geometryLayers[fnOptions.id];
 	}
 
+	/*
+	 * Nothing to do here
+	 */
 	MapEngine.Google.prototype.redraw = function(options, fnOptions) {
 	}
 
+	/**
+	 * Reset implementation level state information 
+	 */
 	MapEngine.Google.prototype.reset = function(options, fnOptions) {
 		this._pins = {};
 		this._kmlLayers = {};
@@ -302,6 +336,11 @@
 		this._geometryLayers = {};
 	}
 
+	/**
+	 * If fnOptions is set, set the zoom.  
+	 * If fnOptions is null, return the zoom 
+	 * fnOptions - numeric zoom level 
+	 */
 	MapEngine.Google.prototype.zoom = function(options, fnOptions) {
 		if(fnOptions){
 			this._map.setZoom(fnOptions);
@@ -310,6 +349,12 @@
 		return this._map.getZoom();
 	}
 
+	/**
+	 * Sets the zoom location on the map 
+	 * fnOptions - object 
+	 * 	.lat - latitude 
+	 * 	.lon - longitude
+	 */
 	MapEngine.Google.prototype.zoomToLocation = function(options, fnOptions) {
 		var location = fnOptions;
 		if(location){
@@ -317,6 +362,13 @@
 		}
 	}
 
+	/**
+	 * If fnOptions is set, set the center of the map 
+	 * If fnOptions is null, get the center of the map 
+	 * fnOptions - object 
+	 * 	.lat - latitude 
+	 * 	.lon - longitude
+	 */
 	MapEngine.Google.prototype.center = function(options, fnOptions) {
 		if(fnOptions){
 			this._map.setCenter(new google.maps.LatLng(fnOptions.lat,fnOptions.lon));
@@ -328,6 +380,19 @@
 		}
 	}
 
+	/** 
+	 * If fnOptions is set, set the drawing mode accordingly 
+	 * If fnOptions is null, return true if in drawing mode, false otherwise 
+	 * If fnOptions is false, turn off drawing mode 
+	 * fnOptions - string 
+	 * 		'circle' - Allow the user to draw circles 
+	 * 		'point' - Allow the user to place points 
+	 * 		'polygon' - Allow the user to create a polygon by drawing a series of lines 
+	 * 		'polyline' - Allow the user to draw a line by setting a series of points 
+	 * 		'rectangle'	- Allow the user to draw a rectangle 
+	 * 	fnOptions - object
+	 * 	.type - see string options above
+	 */
 	MapEngine.Google.prototype.draw = function(options, fnOptions) {
 		if(typeof fnOptions === 'undefined'){
 			return this._drawingManager !== null;
@@ -406,6 +471,14 @@
 		}
 	}
 
+	/**
+	 * Handle the implementation details of an info window 
+	 * fnOptions - object 
+	 * 	evt - Event containing latlng of where the user clicked 
+	 * 	title - (unused) 
+	 * 	content - HTML content 
+	 * 	size - (unused)
+	 */
 	MapEngine.Google.prototype.showInfoWindow = function(options, fnOptions){
 		//TODO, store infoWindow in map storage
 		var evt = fnOptions.evt;

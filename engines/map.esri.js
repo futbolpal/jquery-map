@@ -130,6 +130,11 @@
 		dojo.ready(doInit);
 	}
 
+	/**
+	 * Add a pin to the map 
+	 * Returns the added pin object 
+	 * fnOptions - object, see Esri defaults above (EsriEngineDefaults.pin)
+	 */
 	MapEngine.Esri.prototype.addPin = function(options, fnOptions){
 		var fnAddPin = function(){
 			var _t = this;
@@ -189,6 +194,12 @@
 		});
 	}
 
+	/**
+	 * fnOptions - object
+	 * 	.type - See https://developers.arcgis.com/javascript/jsapi for esri.layers.<type> 
+	 * 	.url - URL source 
+	 * 	.opacity - Alpha scale for transparency
+	 */ 
 	MapEngine.Esri.prototype.addEsriLayer = function(options, fnOptions){
 		var fnAddEsriLayer = function(){
 			var type = fnOptions.type;
@@ -212,6 +223,10 @@
 		this._map.removeLayer(layer);
 	}
 
+	/**
+	 * fnOptions - the function arguments 
+	 * 	.url - The source URL for the KML data 
+	 */
 	MapEngine.Esri.prototype.addKmlLayer = function(options, fnOptions){
 		var fnAddKmlLayer = function(){
 			var url = fnOptions.url;
@@ -333,9 +348,15 @@
 		});
 	}
 
+	/**
+	 * Nothing to do here 
+	 */
 	MapEngine.Esri.prototype.redraw = function(options, fnOptions) {
 	}
 
+	/** 
+	 * Reset all implementation level information 
+	 */
 	MapEngine.Esri.prototype.reset = function(options) {
 		this._pins = {};
 		this._kmlLayers = {};
@@ -343,6 +364,13 @@
 		this._geometryLayers = {};
 	}
 
+	/**
+	 * Get or set the zoom level of the map 
+	 *
+	 * If fnOptions is set, set the center of the map 
+	 * If fnOptions is undefined, return the center of the map 
+	 * fnOptions - numeric zoom level 
+	 */
 	MapEngine.Esri.prototype.zoom = function(options, fnOptions) {
 		if(fnOptions){
 			this._map.setLevel(fnOptions);
@@ -351,6 +379,13 @@
 		return this._map.getLevel();
 	}
 
+	/**
+	 * Zoom the map to a particular coordinate, sets the zoom level to 22 
+	 * 
+	 * fnOptions - object 
+	 * 	.lat - latitude 
+	 * 	.lon - longitude 
+	 */
 	MapEngine.Esri.prototype.zoomToLocation = function(options, fnOptions){
 		var location = fnOptions;
 
@@ -360,6 +395,15 @@
 		return location;
 	}
 
+	/**
+	 * Get or set the center of the map 
+	 *
+	 * If fnOptions is set, set the center of the map 
+	 * If fnOptions is undefined, return the center of the map 
+	 * fnOptions - object
+	 * 	.lat - latitude 
+	 * 	.lon - longitude
+	 */
 	MapEngine.Esri.prototype.center = function(options, fnOptions) {
 		if(fnOptions){
 			var point = new esri.geometry.Point(fnOptions.lon, fnOptions.lat);
@@ -372,6 +416,19 @@
 		}
 	}
 
+	/** 
+	 * If fnOptions is set, set the drawing mode accordingly 
+	 * If fnOptions is null, return true if in drawing mode, false otherwise 
+	 * If fnOptions is false, turn off drawing mode 
+	 * fnOptions - string 
+	 * 		'circle' - Allow the user to draw circles 
+	 * 		'point' - Allow the user to place points 
+	 * 		'polygon' - Allow the user to create a polygon by drawing a series of lines 
+	 * 		'polyline' - Allow the user to draw a line by setting a series of points 
+	 * 		'rectangle'	- Allow the user to draw a rectangle 
+	 * 	fnOptions - object
+	 * 	.type - see string options above
+	 */
 	MapEngine.Esri.prototype.draw = function(options, fnOptions) {
 		var _t = this;
 
