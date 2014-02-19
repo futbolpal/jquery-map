@@ -5,6 +5,8 @@
  * implementation specific attributes to be handled
  */
 (function($, window, undefined) {
+	var exportFunctionName = "jqMap";
+
 	window.MapEngineDefaults = {
 		// Map initialization defaults 
 		map : {
@@ -100,7 +102,7 @@
 			_t._options, 
 			_t._options.engineOptions[_t._options.engine]
 		);
-		$(this).map("draw", _t._options.map.draw);
+		$(this)[exportFunctionName]("draw", _t._options.map.draw);
 
 		return $(this);
 	}
@@ -109,7 +111,7 @@
 	 * Add a pin to the map 
 	 * opts is an Object - see defaults above window.MapEngineDefaults.pins
 	 *
-	 * $('#map_div').map("addPin", {...});
+	 * $('#map_div')[exportFunctionName]("addPin", {...});
 	 */
 	exports.addPin = function(opts){
 		this._instance.addPin(this._options, opts);
@@ -130,7 +132,7 @@
 	/** 
 	 * Add an ESRI layer to the map 
 	 *
-	 * $('#map_div').map("addEsriLayer", {...});
+	 * $('#map_div')[exportFunctionName]("addEsriLayer", {...});
 	 */
 	exports.addEsriLayer = function(opts){
 		this._instance.addEsriLayer(this._options, opts);
@@ -152,7 +154,7 @@
 	 * opts - Object 
 	 * 	.url - URL for where the Kml layer can be retrieved
 	 *
-	 * $('#map_div').map("addKmlLayer", {...}');
+	 * $('#map_div')[exportFunctionName]("addKmlLayer", {...}');
 	 */
 	exports.addKmlLayer = function(opts){
 		this._instance.addKmlLayer(this._options, opts);
@@ -179,7 +181,7 @@
 	 *			.color - the color [r,g,b,a]
 	 *			.stroke - the width 
 	 *
-	 * $('#map_div').map("addGeometryLayer", {...});
+	 * $('#map_div')[exportFunctionName]("addGeometryLayer", {...});
 	 */
 	exports.addGeometryLayer = function(opts){
 		this._instance.addGeometryLayer(this._options, opts);
@@ -204,29 +206,29 @@
 
 		// Update pins
 		$.each(this._options.mapData.pins, function(i, pin){
-			$(_t).map("addPin" , pin);
+			$(_t)[exportFunctionName]("addPin" , pin);
 		});
 
 		// Update esris
 		$.each(this._options.mapData.esriLayers, function(i, layer){
-			$(_t).map("addEsriLayer", layer);
+			$(_t)[exportFunctionName]("addEsriLayer", layer);
 		});
 
 		// Update Kmls
 		$.each(this._options.mapData.kmlLayers, function(i, layer){
-			$(_t).map("addKmlLayer", layer);
+			$(_t)[exportFunctionName]("addKmlLayer", layer);
 		});
 
 		// Update geometries
 		$.each(this._options.mapData.geometryLayers, function(i, layer){
-			$(_t).map("addGeometryLayer", layer);
+			$(_t)[exportFunctionName]("addGeometryLayer", layer);
 		});
 
 		// Update center
-		$(this).map("center", this._options.map.center);
+		$(this)[exportFunctionName]("center", this._options.map.center);
 
 		// Update zoom 
-		$(this).map("zoom", this._options.map.zoom);
+		$(this)[exportFunctionName]("zoom", this._options.map.zoom);
 
 		this._instance.redraw(this._options, opts);
 
@@ -241,7 +243,7 @@
 
 		this._instance.reset(this._options, opts);
 
-		$(this).map("redraw");
+		$(this)[exportFunctionName]("redraw");
 		return $(this);
 	}
 
@@ -332,10 +334,10 @@
 		}
 		if(newEngine && this._options.engine != newEngine){
 			$(this).empty();
-			this._options.map.center = $(this).map("center");
-			this._options.map.zoom = $(this).map("zoom");
+			this._options.map.center = $(this)[exportFunctionName]("center");
+			this._options.map.zoom = $(this)[exportFunctionName]("zoom");
 			this._options.engine = newEngine;
-			$(this).map("init", this._options).map("redraw");
+			$(this)[exportFunctionName]("init", this._options)[exportFunctionName]("redraw");
 			return $(this);
 		}
 		return this._options.engine;
@@ -402,9 +404,9 @@
 	 * This function exposes the API in jQuery widget style.  
 	 *
 	 * It allows the consumer of this library to say:
-	 * $('#map_div').map("addPin", {<pin data>})
+	 * $('#map_div')[exportFunctionName]("addPin", {<pin data>})
 	 */
-	$.fn.map = function(action_or_options, options){
+	$.fn[exportFunctionName] = function(action_or_options, options){
 		var e = this[0];
 		if(typeof action_or_options === 'string'){
 			return exports[action_or_options].call(e, options);
