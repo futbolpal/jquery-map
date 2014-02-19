@@ -154,6 +154,8 @@
 			zoom: GoogleEngineDefaults.map.zoom,
 			center: new google.maps.LatLng(GoogleEngineDefaults.map.center.lat,GoogleEngineDefaults.map.center.lon),
 			mapTypeId: GoogleEngineDefaults.map.type,
+			mapTypeControl: false,
+			streetViewControl: false,
 		    panControl: GoogleEngineDefaults.map.panControl.visible,
 		    panControlOptions: {
 		    	position: GoogleEngineDefaults.map.panControl.position,
@@ -164,7 +166,14 @@
 		    	position: GoogleEngineDefaults.map.zoomControl.position,
 		    },
 		};
-		engineOptions = $.extend(true, {}, defaultEngineOptions, engineOptions);
+
+		var userOptions = {
+			zoom : options.zoom,
+			center : new google.maps.LatLng(options.center.lat, options.center.lon),
+			zoomControl: options.zoomControl.visible,
+			panControl : options.panControl.visible,
+		}
+		engineOptions = $.extend(true, {}, defaultEngineOptions, userOptions, engineOptions);
 
 		this._map = new google.maps.Map(mapDiv, engineOptions);
 	}
